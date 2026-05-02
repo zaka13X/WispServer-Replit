@@ -1,5 +1,7 @@
 run = "npm start"
-entrypoint = "index.js"
 
-[modules]
-nodeBundle = true
+[nix]
+channel = "stable-23_11"
+
+[env]
+PORT = "8080"
