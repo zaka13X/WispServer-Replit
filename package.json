@@ -1,12 +1,13 @@
 {
-  "name": "wisp-proxy-replit",
+  "name": "wisp-proxy",
   "version": "1.0.0",
+  "description": "Wisp JS Proxy",
   "main": "index.js",
-  "dependencies": {
-    "@mercuryworkshop/wisp-js": "latest",
-    "express": "latest"
-  },
   "scripts": {
     "start": "node index.js"
+  },
+  "dependencies": {
+    "@mercuryworkshop/wisp-js": "^0.3.0",
+    "ws": "^8.16.0"
   }
 }
