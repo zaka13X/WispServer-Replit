@@ -1,23 +1,25 @@
-const express = require('express');
-const { createServer } = require('node:http');
-const { server: wisp } = require('@mercuryworkshop/wisp-js/server');
+const { createServer } = require("http");
+const { WebSocketServer } = require("ws");
+const { wisp } = require("@mercuryworkshop/wisp-js/server");
 
-const app = express();
-const server = createServer(app);
+const server = createServer();
+const wispServer = new WebSocketServer({ noServer: true });
 
-
-app.get('/', (req, res) => {
-  res.send('Wisp Server is running!');
+wispServer.on("connection", (socket) => {
+  wisp.handle(socket);
 });
 
-
-server.on('upgrade', (req, socket, head) => {
-  if (req.url.startsWith('/wisp/')) {
-    wisp.routeRequest(req, socket, head);
+server.on("upgrade", (request, socket, head) => {
+  if (request.url === "/wisp") {
+    wispServer.handleUpgrade(request, socket, head, (ws) => {
+      wispServer.emit("connection", ws, request);
+    });
+  } else {
+    socket.destroy();
   }
 });
 
-const PORT = process.env.PORT || 8000;
+const PORT = process.env.PORT || 8080;
 server.listen(PORT, () => {
-  console.log(`Server listening on port ${PORT}`);
+  console.log(`Wisp server running on port ${PORT}`);
 });
